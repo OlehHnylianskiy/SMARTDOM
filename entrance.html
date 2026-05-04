@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartDorm - Адміністративна панель входу</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .qr-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+    }
+
+    .qr-panel {
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      padding: 50px;
+      text-align: center;
+      max-width: 700px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .qr-panel h1 {
+      color: #667eea;
+      margin-bottom: 5px;
+      font-size: 3em;
+      font-weight: 700;
+    }
+
+    .qr-panel .subtitle {
+      color: #764ba2;
+      margin-bottom: 30px;
+      font-size: 1.3em;
+      font-weight: 500;
+    }
+
+    #entrance-qr {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+      border-radius: 20px;
+      margin: 30px 0;
+      border: 3px dashed #667eea;
+      transition: all 0.3s;
+    }
+
+    #entrance-qr:hover {
+      border-color: #764ba2;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .qr-timer {
+      color: #764ba2;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-top: 15px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 35px;
+    }
+
+    .controls button {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95em;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-refresh {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-refresh:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+      color: white;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(39, 174, 96, 0.4);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+    }
+
+    .btn-print:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+    }
+
+    .instruction {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-left: 5px solid #667eea;
+      padding: 25px;
+      margin-top: 35px;
+      border-radius: 12px;
+      text-align: left;
+      color: #333;
+    }
+
+    .instruction h3 {
+      margin-top: 0;
+      color: #667eea;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+    }
+
+    .instruction ol {
+      margin: 10px 0;
+      padding-left: 25px;
+      list-style: decimal;
+    }
+
+    .instruction li {
+      margin: 10px 0;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .status-bar {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .status-item span {
+      font-size: 0.95em;
+      color: #666;
+    }
+
+    .status-value {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 1.5em;
+      background: white;
+      padding: 5px 12px;
+      border-radius: 8px;
+    }
+
+    .footer {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 2px solid #e0e0e0;
+      text-align: center;
+    }
+
+    .footer p {
+      color: #999;
+      font-size: 0.9em;
+      margin: 8px 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    .footer span {
+      background: #f0f0f0;
+      padding: 4px 10px;
+      border-radius: 5px;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .qr-panel {
+        padding: 30px;
+      }
+
+      .qr-panel h1 {
+        font-size: 2em;
+      }
+
+      .qr-panel .subtitle {
+        font-size: 1.1em;
+      }
+
+      #entrance-qr {
+        padding: 25px;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .controls button {
+        width: 100%;
+      }
+
+      .status-item {
+        flex: 0 0 100%;
+      }
+
+      .instruction {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="qr-display">
+    <div class="qr-panel">
+      <h1>🏢 SmartDorm</h1>
+      <p class="subtitle">Система управління гуртожитком з QR-доступом</p>
+
+      <div class="status-bar">
+        <div class="status-item">
+          <span>📱 Студентів:</span>
+          <span class="status-value" id="total-students">0</span>
+        </div>
+        <div class="status-item">
+          <span>✅ Входів:</span>
+          <span class="status-value" id="today-entries">0</span>
+        </div>
+      </div>
+
+      <p style="color: #764ba2; font-weight: bold; margin-bottom: 20px; font-size: 1.15em;">
+        👇 Студент сканує цей QR код для входу в систему
+      </p>
+
+      <div id="entrance-qr"></div>
+
+      <div class="qr-timer">
+        ⏱️ QR код оновлюється кожні 30 секунд
+      </div>
+
+      <div class="controls">
+        <button class="btn-refresh" onclick="generateEntranceQR()">🔄 Оновити QR</button>
+        <button class="btn-download" onclick="downloadEntranceQR()">📥 Скачати</button>
+        <button class="btn-print" onclick="printEntranceQR()">🖨️ Друк</button>
+      </div>
+
+      <div class="instruction">
+        <h3>📋 Як це працює:</h3>
+        <ol>
+          <li><strong>Студент</strong> бачить QR код на монітор гуртожитку</li>
+          <li><strong>Сканує QR</strong> з телефону (будь-яким сканером)</li>
+          <li><strong>Браузер відкривається</strong> на мобільній версії SmartDorm</li>
+          <li><strong>Студент реєструється</strong> в системі (email, пароль, дані)</li>
+          <li><strong>Отримує персональний QR код</strong> для входу</li>
+          <li><strong>Адміністратор сканує</strong> персональний QR на вході</li>
+          <li><strong>Система записує</strong> час входу в базу даних</li>
+        </ol>
+      </div>
+
+      <div class="footer">
+        <p>🌐 Доступ з будь-якого пристрою: <span id="access-link">smartdorm.github.io</span></p>
+        <p>📡 IP локальної мережі: <span id="ip-address">192.168.1.100:8000</span></p>
+        <p style="margin-top: 15px; font-size: 0.85em; color: #aaa;">SmartDorm v1.0 | Система управління гуртожитком</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- QR бібліотека -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Конфіг Firebase -->
+  <script src="js/firebase-config.js"></script>
+
+  <script>
+    // Генерація QR коду для входу
+    function generateEntranceQR() {
+      const baseUrl = window.location.protocol + '//' + window.location.host;
+      const entranceUrl = baseUrl + '?entrance=true';
+
+      const qrContainer = document.getElementById('entrance-qr');
+      qrContainer.innerHTML = '';
+
+      try {
+        new QRCode(qrContainer, {
+          text: entranceUrl,
+          width: 400,
+          height: 400,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        console.log('QR код згенерований:', entranceUrl);
+      } catch (e) {
+        console.error('Помилка при генерації QR:', e);
+        qrContainer.innerHTML = '<p>Помилка при генерації QR коду</p>';
+      }
+    }
+
+    // Скачування QR як зображення
+    function downloadEntranceQR() {
+      const canvas = document.querySelector('#entrance-qr canvas');
+      if (canvas) {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'smartdorm-entrance-qr.png';
+        link.click();
+      }
+    }
+
+    // Друк QR коду
+    function printEntranceQR() {
+      const printWindow = window.open('', '', 'width=600,height=700');
+      const canvas = document.querySelector('#entrance-qr canvas');
+      if (canvas) {
+        printWindow.document.write(`
+          <html>
+          <head>
+            <title>SmartDorm - QR код входу</title>
+            <style>
+              body { text-align: center; padding: 20px; font-family: Arial; }
+              h1 { color: #667eea; }
+              img { max-width: 400px; margin: 20px auto; }
+              p { color: #666; margin-top: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>🏢 SmartDorm</h1>
+            <p><strong>Панель входу студентів</strong></p>
+            <img src="${canvas.toDataURL()}" />
+            <p>Студент сканує цей QR з телефону для входу в систему</p>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+
+    // Завантаження статистики
+    function loadStatistics() {
+      if (!db) return;
+
+      // Кількість студентів
+      db.collection('users').where('role', '==', 'student').get().then(snapshot => {
+        document.getElementById('total-students').textContent = snapshot.size;
+      }).catch(e => console.log('Помилка:', e));
+
+      // Входи сьогодні
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      db.collection('access_log')
+        .where('timestamp', '>=', today)
+        .where('timestamp', '<', tomorrow)
+        .get()
+        .then(snapshot => {
+          document.getElementById('today-entries').textContent = snapshot.size;
+        })
+        .catch(e => console.log('Помилка:', e));
+    }
+
+    // Ініціалізація при завантаженні
+    window.addEventListener('DOMContentLoaded', function() {
+      // Генеруємо QR
+      generateEntranceQR();
+
+      // Оновлюємо QR кожні 30 секунд
+      setInterval(generateEntranceQR, 30000);
+
+      // Завантажуємо статистику кожні 5 секунд
+      loadStatistics();
+      setInterval(loadStatistics, 5000);
+
+      // Показуємо IP адресу та посилання
+      const ipAddress = window.location.host;
+      document.getElementById('ip-address').textContent = ipAddress;
+      document.getElementById('access-link').textContent = window.location.href.split('?')[0];
+    });
+  </script>
+</body>
+</html>
